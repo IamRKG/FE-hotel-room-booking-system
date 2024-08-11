@@ -1,50 +1,55 @@
-# React + TypeScript + Vite
+# Hotel Room Booking System Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for our Hotel Room Booking System. It's built with React and TypeScript, providing a user-friendly interface for customers to browse rooms, make bookings, and manage their reservations.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Browse available rooms with detailed information
+- Filter rooms by type, capacity, and price
+- Make room reservations
+- View and manage bookings
+- Responsive design for mobile and desktop
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React
+- TypeScript
+- React Query for data fetching
+- Framer Motion for animations
+- Tailwind CSS for styling
 
-- Configure the top-level `parserOptions` property like this:
+## Getting Started
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Start the development server: `npm start`
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Project Structure
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- `src/components`: Reusable React components
+- `src/pages`: Main page components
+- `src/services`: API service functions
+- `src/types`: TypeScript type definitions
+- `src/assets`: Static assets like images
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Key Components
+
+- `HomePage`: Displays available rooms and filtering options
+- `RoomCard`: Individual room display component
+- `BookingForm`: Handles the booking process
+
+## API Integration
+
+The frontend communicates with the backend API using axios. The main API functions are located in `src/services/api.ts`.
+
+## Styling
+
+We use Tailwind CSS for styling, providing a responsive and customizable design system.
+
+## Deployment
+
+The frontend is designed to be easily deployable to platforms like Vercel or Netlify.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
