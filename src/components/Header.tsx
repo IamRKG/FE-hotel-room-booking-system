@@ -42,7 +42,9 @@ const Header: React.FC = () => {
   return (
     <header className="bg-orange-950 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold">PATHIYAM</h1>
+      <Link to="/" className="text-2xl font-bold hover:text-orange-200">
+        PATHIYAM
+      </Link>
         <nav className="hidden md:block">
           <ul className="flex space-x-4">
             <NavItems />
