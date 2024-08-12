@@ -4,22 +4,21 @@ import { createBooking, checkRoomAvailability } from '../services/api';
 import { Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { FaCalendarAlt } from 'react-icons/fa'; // Import calendar icon
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, price }) => {
   const { user } = useAuthStore();
-  const [checkInDate, setCheckInDate] = useState('');
-  const [checkOutDate, setCheckOutDate] = useState('');
+  const [checkInDate, setCheckInDate] = useState<Date | null>(null);
+  const [checkOutDate, setCheckOutDate] = useState<Date | null>(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   
   const { data: isAvailable, refetch: checkAvailability } = useQuery({
     queryKey: ['roomAvailability', roomId, checkInDate, checkOutDate],
-    queryFn: () => checkRoomAvailability(roomId, checkInDate, checkOutDate),
-    enabled: false,
+    queryFn: () => checkRoomAvailability(roomId, checkInDate?.toISOString() ?? '', checkOutDate?.toISOString() ?? ''),    enabled: false,
   });
-
-  
 
   useEffect(() => {
     if (checkInDate && checkOutDate) {
@@ -37,15 +36,18 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
   const validateDates = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
 
-    if (checkIn < today) {
+    if (!checkInDate || !checkOutDate) {
+      setError('Please select both check-in and check-out dates');
+      return false;
+    }
+
+    if (checkInDate < today) {
       setError('Check-in date cannot be in the past');
       return false;
     }
 
-    if (checkOut <= checkIn) {
+    if (checkOutDate <= checkInDate) {
       setError('Check-out date must be after check-in date');
       return false;
     }
@@ -56,11 +58,11 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateDates()) {
+    if (validateDates() && checkInDate && checkOutDate) {
       const booking = {
         roomId,
-        checkInDate,
-        checkOutDate,
+        checkInDate: checkInDate.toISOString(),
+        checkOutDate: checkOutDate.toISOString(),
         totalPrice: calculateTotalPrice(),
       };
       bookingMutation.mutate(booking);
@@ -68,15 +70,12 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
   };
 
   const calculateTotalPrice = () => {
-    const checkIn = new Date(checkInDate);
-    const checkOut = new Date(checkOutDate);
-    const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-    return nights * price;
+    if (checkInDate && checkOutDate) {
+      const nights = Math.ceil((checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24));
+      return nights * price;
+    }
+    return 0;
   };
-
-  {checkInDate && checkOutDate && (
-    <p className="font-bold">Total Price: ${calculateTotalPrice()}</p>
-  )}
 
   if (!user) {
     return (
@@ -106,17 +105,18 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
             Check-in Date
           </label>
           <div className="relative">
-            <input
-              type="date"
-              id="checkInDate"
-              value={checkInDate}
-              onChange={(e) => setCheckInDate(e.target.value)}
-              min={new Date().toISOString().split('T')[0]}
-              className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-            <div  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" ><FaCalendarAlt/></div>
-            
+          <DatePicker
+  selected={checkInDate}
+  onChange={(date: Date | null) => setCheckInDate(date)}
+  minDate={new Date()}
+  className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+  required
+  placeholderText="Select check-in date"
+  isClearable
+  dateFormat="MMMM d, yyyy"
+  withPortal
+/>
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><FaCalendarAlt/></div>
           </div>
         </div>
         <div className="relative">
@@ -124,16 +124,18 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
             Check-out Date
           </label>
           <div className="relative">
-            <input
-              type="date"
-              id="checkOutDate"
-              value={checkOutDate}
-              onChange={(e) => setCheckOutDate(e.target.value)}
-              min={checkInDate || new Date().toISOString().split('T')[0]}
-              className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
-             <div  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" ><FaCalendarAlt/></div>
+          <DatePicker
+  selected={checkOutDate}
+  onChange={(date: Date | null) => setCheckOutDate(date)}
+  minDate={checkInDate || new Date()}
+  className="w-full p-2 pl-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+  required
+  placeholderText="Select check-out date"
+  isClearable
+  dateFormat="MMMM d, yyyy"
+  withPortal
+/>
+            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"><FaCalendarAlt/></div>
           </div>
         </div>
         {checkInDate && checkOutDate && (
@@ -145,7 +147,7 @@ const BookingForm: React.FC<{ roomId: string; price: number }> = ({ roomId, pric
         {checkInDate && checkOutDate && (
           <div className="bg-gray-100 p-4 rounded-md">
             <p className="font-bold text-lg">Total Price: ${calculateTotalPrice()}</p>
-            <p className="text-sm text-gray-600">for {calculateNights(checkInDate, checkOutDate)} night(s)</p>
+            <p className="text-sm text-gray-600">for {calculateNights(checkInDate.toISOString(), checkOutDate.toISOString())} night(s)</p>
           </div>
         )}
         <button
