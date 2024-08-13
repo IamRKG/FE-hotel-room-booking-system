@@ -222,7 +222,7 @@ const RoomDetails: React.FC = () => {
         </div>
       </AnimatedSection>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-10">
         <AnimatedSection>
           <div className="mb-8">
             <div className="flex flex-wrap border-b border-gray-300">
@@ -290,20 +290,22 @@ const RoomDetails: React.FC = () => {
           </motion.div>
         </AnimatedSection>
 
-        <AnimatedSection>
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
-            {faqs.map((faq, index) => (
-              <FAQItem key={index} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
-        </AnimatedSection>
+     
 
         <AnimatedSection>
           <div ref={bookingFormRef} className={`mt-8 bg-white shadow-lg rounded-lg p-6 ${isSticky ? 'sticky top-20 z-10' : ''}`}>
             <h2 className="text-2xl font-bold mb-4">Book This Room</h2>
            
             <BookingForm roomId={room._id} price={room.price} />
+          </div>
+        </AnimatedSection>
+
+        <AnimatedSection>
+          <div className="bg-white  mt-8 rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+            {faqs.map((faq, index) => (
+              <FAQItem key={index} question={faq.question} answer={faq.answer} />
+            ))}
           </div>
         </AnimatedSection>
       </div>

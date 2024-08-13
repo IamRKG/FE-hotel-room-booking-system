@@ -3,12 +3,20 @@ import { Link } from 'react-router-dom';
 import { Room } from '../types/room';
 import { motion } from 'framer-motion';
 import { FaBed, FaUsers, FaWifi, FaTv, FaParking } from 'react-icons/fa';
+import RoomCardSkeleton from './RoomCardSkeleton';
 
 interface RoomCardProps {
   room: Room;
+  isLoading?: boolean;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
+const RoomCard: React.FC<RoomCardProps> = ({ room,isLoading = false  }) => {
+ 
+  
+  if (isLoading) {
+    return <RoomCardSkeleton />;
+  }
+  
   return (
     <Link to={`/rooms/${room._id}`} className="block">
       <motion.div 
