@@ -27,6 +27,7 @@
     "react-masonry-css": "^1.0.16",
     "react-medium-image-zoom": "^5.2.8",
     "react-multi-date-picker": "^4.5.2",
+    "react-parallax": "^3.5.1",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.26.0",
     "react-slick": "^0.30.2",
