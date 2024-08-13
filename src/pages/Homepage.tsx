@@ -1,136 +1,104 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getRooms } from '../services/api';
-import { Room } from '../types/room';
 import RoomCard from '../components/RoomCard';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 import bannerImage from '../assets/banner.png';
 
+
 const HomePage: React.FC = () => {
-  const [filters, setFilters] = useState({
-    type: '',
-    minCapacity: 0,
-    maxPrice: 1000
-  });
+  const [activeTab, setActiveTab] = useState('all');
 
-  const { data: rooms, isLoading, error } = useQuery<Room[]>({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['rooms'],
-    queryFn: getRooms
+    queryFn: () => getRooms(),
+    getNextPageParam: (lastPage: any) => lastPage.nextPage,
+    initialPageParam: 1,
   });
 
-  
-  const filteredRooms = Array.isArray(rooms) 
-  ? rooms.filter(room => 
-    
-      (filters.type === '' || room.type === filters.type) &&
-      room.capacity >= filters.minCapacity &&
-      room.price <= filters.maxPrice
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage, hasNextPage]);
+
+  const filteredRooms = data?.pages.flatMap(page => 
+    page.filter(room => 
+      activeTab === 'all' || room.type === activeTab
     )
-  : [];
+  ) || [];
 
-
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: name === 'maxPrice' ? Number(value) : value }));
+  const buttonVariants = {
+    active: { backgroundColor: '#7c2d12', color: '#ffffff' },
+    inactive: { backgroundColor: '#e5e7eb', color: '#1f2937' }
   };
 
-
-
-  if (isLoading) return <div className="text-center mt-8">Loading rooms...</div>;
-  if (error) return <div className="text-center mt-8 text-red-500">Error loading rooms</div>;
-
   return (
-    <div className="bg-gradient-to-r from-gray-100 to-gray-200 min-h-screen">
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="container mx-auto px-4 py-8"
-      >
-        <div 
-  className="bg-cover bg-center h-96 rounded-lg flex items-center justify-center mb-12" 
-  style={{
-    backgroundImage: `url(${bannerImage})`,
-  }}
->
-  <div className="text-center text-white bg-black bg-opacity-50 p-8 rounded-lg">
-    <h1 className="text-5xl font-bold mb-4">Luxury Awaits You</h1>
-    <p className="text-2xl">Discover comfort beyond imagination</p>
-  </div>
-</div>
+    <div className="bg-gray-100 min-h-screen">
+      <div className="bg-cover bg-center h-64 relative" style={{ backgroundImage: `url(${bannerImage})` }}>
+        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-4xl md:text-6xl text-white font-bold text-center">Discover Your Perfect Stay</h1>
+        </div>
+      </div>
 
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white shadow-lg rounded-lg p-6 mb-8"
-        >
-          <h2 className="text-2xl font-semibold mb-4">Find Your Perfect Room</h2>
-          <div className="flex flex-wrap gap-4">
-            <select
-              name="type"
-              onChange={handleFilterChange}
-              className="p-2 border rounded-full"
-            >
-              <option value="">All Types</option>
-              <option value="Single">Single</option>
-              <option value="Double">Double</option>
-              <option value="Suite">Suite</option>
-            </select>
-            <input
-              type="number"
-              name="minCapacity"
-              placeholder="Min Capacity"
-              onChange={handleFilterChange}
-              className="p-2 border rounded-full"
-            />
-            <div className="flex items-center">
-              <input
-                type="range"
-                name="maxPrice"
-                min="0"
-                max="1000"
-                step="50"
-                value={filters.maxPrice}
-                onChange={handleFilterChange}
-                className="w-48 bg-orange-950"
-              />
-              <span className="ml-2">${filters.maxPrice}</span>
-            </div>
+      <div className="sticky top-0 bg-white shadow-md z-10">
+        <div className="container mx-auto px-4 py-4 flex justify-center">
+          <div className="flex space-x-4">
+            {['all', 'Single', 'Double', 'Suite'].map((tab) => (
+              <motion.button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className="px-4 py-2 rounded-full"
+                variants={buttonVariants}
+                animate={activeTab === tab ? 'active' : 'inactive'}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+              >
+                {tab === 'all' ? 'All Rooms' : tab}
+              </motion.button>
+            ))}
           </div>
-        </motion.div>
+        </div>
+      </div>
 
-        
+      <main className="container mx-auto px-4 py-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredRooms.map((room) => (
+                <motion.div 
+                  key={room._id} 
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <RoomCard room={room} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <h2 className="text-3xl font-bold mb-6">All Available Rooms</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-  {filteredRooms?.map((room) => (
-    <motion.div 
-      key={room._id} 
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.3 }}
-    >
-      <RoomCard room={room} />
-    </motion.div>
-  ))}
-</div>
-        </motion.div>
+        {isFetchingNextPage ? (
+          <p className="text-center mt-8">Loading more rooms...</p>
+        ) : (
+          <div ref={ref} className="h-10" />
+        )}
+      </main>
 
-        {/* <Link to="/booking">
-  <motion.button
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.9 }}
-    className="fixed bottom-8 right-8 bg-orange-950 text-white px-6 py-3 rounded-full shadow-lg hover:bg-orange-900 transition-colors duration-300"
-  >
-    Book Now
-  </motion.button>
-</Link> */}
-      </motion.div>
     </div>
   );
 };

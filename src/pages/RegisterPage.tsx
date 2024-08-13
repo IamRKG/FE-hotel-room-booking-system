@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const RegisterPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-start py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-start pt-20 py-8 px-4 sm:px-6 lg:px-8">
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
