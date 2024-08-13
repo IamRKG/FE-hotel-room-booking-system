@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
               <motion.button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className="px-4 py-2 rounded-full"
+                className="px-4 py-2 rounded"
                 variants={buttonVariants}
                 animate={activeTab === tab ? 'active' : 'inactive'}
                 whileHover={{ scale: 1.05 }}

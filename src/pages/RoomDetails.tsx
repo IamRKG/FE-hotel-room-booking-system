@@ -7,15 +7,15 @@ import BookingForm from '../components/BookingForm';
 import { FaBed, FaUsers, FaWifi, FaTv, FaParking, FaCoffee, FaSwimmingPool, FaStar } from 'react-icons/fa';
 
 const images = [
-  '../../public/images/rooms/gallary/image1.png',
-'../../public/images/rooms/gallary/image2.png',
-'../../public/images/rooms/gallary/image3.png',
-'../../public/images/rooms/gallary/image4.png',
-'../../public/images/rooms/gallary/image5.png',
-'../../public/images/rooms/gallary/image6.png',
-'../../public/images/rooms/gallary/image7.png',
-'../../public/images/rooms/gallary/image8.png',
-'../../public/images/rooms/gallary/image9.png',
+  '../images/rooms/gallary/image1.png',
+'../images/rooms/gallary/image2.png',
+'../images/rooms/gallary/image3.png',
+'../images/rooms/gallary/image4.png',
+'../images/rooms/gallary/image5.png',
+'../images/rooms/gallary/image6.png',
+'../images/rooms/gallary/image7.png',
+'../images/rooms/gallary/image8.png',
+'../images/rooms/gallary/image9.png',
 ]
 
 
