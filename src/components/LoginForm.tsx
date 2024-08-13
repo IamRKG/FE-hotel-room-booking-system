@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 import { useAuthStore } from '../store/authStore';
+import { toast } from 'react-toastify';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -35,11 +36,12 @@ const LoginForm: React.FC = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const user = await loginMutation.mutateAsync({ email, password });
+        const user = await loginMutation.mutateAsync({email, password});
         setUser(user);
+        toast.success('Login successful!');
         navigate('/');
       } catch (error) {
-        // Error handling is done in the onError callback of useMutation
+        toast.error('Login failed. Please check your credentials.');
       }
     }
   };
