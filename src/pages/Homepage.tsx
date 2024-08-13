@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import bannerImage from '../assets/banner.png';
 import { Room } from '../types/room';
+import { Parallax } from 'react-parallax';
 
 
 const HomePage: React.FC = () => {
@@ -39,12 +40,27 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <div className="bg-cover bg-center h-64 relative" style={{ backgroundImage: `url(${bannerImage})` }}>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-4xl md:text-6xl text-white font-bold text-center">Discover Your Perfect Stay</h1>
-        </div>
-      </div>
+       <Parallax
+        bgImage={bannerImage}
+        strength={0}
+        className="h-64 md:h-96"
+      >
+     <div className="bg-cover bg-center h-64 md:h-96 relative overflow-hidden">
+    
+  <div className="absolute inset-0 bg-black opacity-50"></div>
+  <div className="absolute inset-0 flex flex-col items-center justify-center">
+    <motion.h1 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8 }}
+      className="text-4xl md:text-6xl text-white font-bold text-center mb-4"
+    >
+      Discover Your Perfect Stay
+    </motion.h1>
+  </div>
+</div>
+</Parallax>
+
 
       <div className="sticky top-0 bg-white shadow-md z-10">
         <div className="container mx-auto px-4 py-4 flex justify-center">
