@@ -23,10 +23,21 @@ const Header: React.FC = () => {
   };
 
   const UserDropdown = () => (
-    <div className="absolute mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10">
-      <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</Link>
-      <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
-    </div>
+    <AnimatePresence>
+    {isDropdownOpen && (
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2 }}
+        className="absolute mt-2 w-40 bg-white rounded-md shadow-lg py-1 z-10"
+      >
+        <Link to="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</Link>
+        <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+      </motion.div>
+    )}
+  </AnimatePresence>
+  
   );
 
   const NavItems = () => (
