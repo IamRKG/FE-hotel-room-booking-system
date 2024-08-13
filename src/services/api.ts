@@ -85,3 +85,9 @@ export const sendNotification = async (userId: string, message: string, type: st
   return response.data;
 };
 
+
+
+export const saveToFavorites = async (userId: string, roomId: string) => {
+  const response = await axios.post(`${API_URL}/users/${userId}/favorites`, { roomId });
+  return response.data;
+};

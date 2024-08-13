@@ -70,6 +70,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ roomId, price }) => {
         <div className="relative">
           <DatePicker
             selected={checkInDate}
+            placeholderText='Check-in Date'
             onChange={(date: Date | null) => {
               if (date) {
                 setCheckInDate(date);
@@ -99,6 +100,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ roomId, price }) => {
         <div className="relative">
           <DatePicker
             selected={checkOutDate}
+             placeholderText='Check-out Date'
             onChange={(date: Date | null) => {
               if (date) {
                 setCheckOutDate(date);
