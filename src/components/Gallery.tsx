@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowLeft, FaArrowRight, FaTimes } from 'react-icons/fa';
 
 const images = [
-  '/images/gallery/image1.jpg',
-  '/images/gallery/image2.jpg',
+  '/images/rooms/gallary/image1.png',
+  '/images/rooms/gallary/image1.png',
   '/images/gallery/image3.jpg',
   '/images/gallery/image4.jpg',
   '/images/gallery/image5.jpg',
