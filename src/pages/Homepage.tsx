@@ -5,12 +5,13 @@ import RoomCard from '../components/RoomCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import bannerImage from '../assets/banner.png';
+import { Room } from '../types/room';
 
 
 const HomePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState('all');
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage,isLoading } = useInfiniteQuery({
     queryKey: ['rooms'],
     queryFn: () => getRooms(),
     getNextPageParam: (lastPage: any) => lastPage.nextPage,
@@ -68,28 +69,29 @@ const HomePage: React.FC = () => {
 
       <main className="container mx-auto px-4 py-8">
         <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+        <motion.div
+  initial={{ y: 20, opacity: 0 }}
+  animate={{ y: 0, opacity: 1 }}
+  transition={{ duration: 0.5, delay: 0.4 }}
+>
+  <h2 className="text-3xl font-bold mb-6">All Available Rooms</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    {isLoading || !filteredRooms
+      ? Array.from({ length: 6 }).map((_, index) => (
+          <RoomCard key={`skeleton-${index}`} room={{} as Room} isLoading={true} />
+        ))
+      : filteredRooms.map((room) => (
+          <motion.div 
+            key={room._id} 
+            whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredRooms.map((room) => (
-                <motion.div 
-                  key={room._id} 
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <RoomCard room={room} />
-                </motion.div>
-              ))}
-            </div>
+            <RoomCard room={room} isLoading={false} />
           </motion.div>
+        ))}
+  </div>
+</motion.div>
+
         </AnimatePresence>
 
         {isFetchingNextPage ? (
