@@ -82,7 +82,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4 md:py-6">
           <Link to="/" className="text-2xl font-bold hover:text-orange-200 transition duration-300">
-            PATHIYAM
+            Pathayam
           </Link>
           <nav className="hidden md:block">
             <ul className="flex space-x-6">
