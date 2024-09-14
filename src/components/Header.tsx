@@ -11,6 +11,7 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  
   const handleLogout = () => {
     logout();
     toast.success('You have been successfully logged out!', {

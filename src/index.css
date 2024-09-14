@@ -14,4 +14,13 @@
     right: 0;
     transition: transform 0.3s ease-in-out;
   }
+  .banner-height {
+    height: calc(100vh - var(--header-height, 0px));
+  }
+  
+  @media (max-width: 768px) {
+    .banner-height {
+      height: calc(100vh - var(--header-height, 0px) - 4rem);
+    }
+  }
   
