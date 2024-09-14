@@ -1,15 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getRooms } from '../services/api';
 import RoomCard from '../components/RoomCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import bannerImage from '../assets/banner.png';
+
 import { Room } from '../types/room';
+
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { Parallax } from 'react-parallax';
 
-
 const HomePage: React.FC = () => {
+  const bannerImages = [
+    { image: '/gallary/img1.jpeg', text: 'Luxurious Accommodations' },
+    { image: '/gallary/img2.jpeg', text: 'Stunning Views' },
+    { image: '/gallary/img3.jpeg', text: 'Elegant Dining' },
+    { image: '/gallary/img4.jpeg', text: 'Relaxing Spa Retreats' },
+    { image: '/gallary/img5.jpeg', text: 'Modern Amenities' },
+    { image: '/gallary/img6.jpeg', text: 'Exquisite Suites' },
+    { image: '/gallary/img7.jpeg', text: 'Breathtaking Landscapes' },
+    { image: '/gallary/img8.jpeg', text: 'Gourmet Cuisine' },
+    { image: '/gallary/img9.jpeg', text: 'Tranquil Getaways' },
+    { image: '/gallary/img10.jpeg', text: 'Unforgettable Experiences' },
+    { image: '/gallary/img11.jpeg', text: 'Exclusive Services' },
+    { image: '/gallary/img12.jpeg', text: 'Scenic Beauty' },
+    { image: '/gallary/img13.jpeg', text: 'Cozy Retreats' },
+    { image: '/gallary/img14.jpeg', text: 'Luxe Interiors' },
+    { image: '/gallary/img15.jpeg', text: 'Serene Atmospheres' },
+    { image: '/gallary/img16.jpeg', text: 'Opulent Decor' },
+    { image: '/gallary/img17.jpeg', text: 'Majestic Surroundings' },
+    { image: '/gallary/img18.jpeg', text: 'Unparalleled Comfort' }
+  ];
+  
+  const sliderSettings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    fade: true,
+    dots: true,
+  };
+ 
+
   const [activeTab, setActiveTab] = useState('all');
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage,isLoading } = useInfiniteQuery({
@@ -39,29 +75,39 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-       <Parallax
-        bgImage={bannerImage}
-        strength={0}
-        className="h-64 md:h-96"
-      >
-     <div className="bg-cover bg-center h-64 md:h-96 relative overflow-hidden">
-    
-  <div className="absolute inset-0 bg-black opacity-50"></div>
-  <div className="absolute inset-0 flex flex-col items-center justify-center">
-    <motion.h1 
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
-      className="text-4xl md:text-6xl text-white font-bold text-center mb-4"
-    >
-      Discover Your Perfect Stay
-    </motion.h1>
-  </div>
-</div>
-</Parallax>
+    <div className="bg-gray-100 min-h-screen" >
+   <section className="relative w-full h-[calc(100vh-64px)] overflow-hidden">
 
 
+
+   <Slider {...sliderSettings} className="absolute inset-0 h-full">
+
+      {bannerImages.map((slide, index) => (
+      <div key={index} className="h-full relative">
+
+<Parallax
+  bgImage={slide.image}
+  strength={600}
+  bgImageStyle={{height: '100%', width: '100%', objectFit: 'cover'}}
+>
+            <div className="bg-cover bg-center h-screen relative overflow-hidden flex items-center justify-center">
+              <div className="absolute inset-0 bg-black opacity-50"></div>
+              <div className="relative z-10 text-center px-4">
+                <motion.h1 
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="text-3xl md:text-6xl text-white font-bold mb-4"
+                >
+                  {slide.text}
+                </motion.h1>
+              </div>
+            </div>
+          </Parallax>
+        </div>
+      ))}
+    </Slider>
+</section>
       <div className="sticky top-0 bg-white shadow-md z-10">
         <div className="container mx-auto px-4 py-4 flex justify-center">
           <div className="flex space-x-4">
@@ -119,6 +165,6 @@ const HomePage: React.FC = () => {
 
     </div>
   );
-};
+};export default HomePage;
 
-export default HomePage;
+
