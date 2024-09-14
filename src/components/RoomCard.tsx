@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Room } from '../types/room';
 import { motion } from 'framer-motion';
-import { FaBed, FaUsers, FaWifi, FaTv, FaParking } from 'react-icons/fa';
+import { FaBed, FaUsers, FaWifi, FaTv, FaParking, FaPhone, FaWhatsapp } from 'react-icons/fa';
 import RoomCardSkeleton from './RoomCardSkeleton';
 
 interface RoomCardProps {
@@ -10,13 +10,22 @@ interface RoomCardProps {
   isLoading?: boolean;
 }
 
-const RoomCard: React.FC<RoomCardProps> = ({ room,isLoading = false  }) => {
- 
-  
+const RoomCard: React.FC<RoomCardProps> = ({ room, isLoading = false }) => {
   if (isLoading) {
     return <RoomCardSkeleton />;
   }
-  
+
+  const handleCall = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = `tel:+919443222997`; // Replace with your hotel's phone number
+  };
+
+  const handleWhatsApp = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const message = `Hi, I'm interested in Room ${room.number} (${room.type}).`;
+    window.open(`https://wa.me/+919443222997?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
   return (
     <Link to={`/rooms/${room._id}`} className="block">
       <motion.div 
@@ -44,16 +53,25 @@ const RoomCard: React.FC<RoomCardProps> = ({ room,isLoading = false  }) => {
           </div>
           <div className="flex justify-between items-center">
             <span className="text-2xl font-bold text-orange-950">${room.price}<span className="text-sm font-normal">/night</span></span>
-            <span 
-              className="bg-orange-950 text-white px-6 py-2 rounded-full hover:bg-orange-900 transition duration-300"
-            >
-              Book Now
-            </span>
+            <div className="flex space-x-2">
+              <button 
+                onClick={handleCall}
+                className="bg-orange-950 text-white px-4 py-2 rounded-full hover:bg-orange-900 transition duration-300 flex items-center"
+              >
+                <FaPhone className="mr-2" />
+                <span className="whitespace-nowrap">Call</span>
+              </button>
+              <button 
+                onClick={handleWhatsApp}
+                className="bg-orange-950 text-white px-4 py-2 rounded-full hover:bg-orange-900 transition duration-300 flex items-center"
+              >
+                <FaWhatsapp className="mr-2" />
+                <span className="whitespace-nowrap">WhatsApp</span>
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
     </Link>
   );
-};
-
-export default RoomCard;
+};export default RoomCard;
